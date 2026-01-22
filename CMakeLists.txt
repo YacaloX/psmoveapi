@@ -2,16 +2,20 @@ cmake_minimum_required(VERSION 3.16)
 
 project(PSMoveAPI)
 
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/hidapi/hidapi/hidapi.h")
-    message(FATAL_ERROR "hidapi not found, did you forget to run 'git submodule update --init'?")
-endif()
+option(PSMOVEAPI_VENDORING "Vendor dependencies" ON)
 
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/libusb-1.0/libusb/libusb.h")
-    message(FATAL_ERROR "libusb not found, did you forget to run 'git submodule update --init'?")
-endif()
+if (PSMOVEAPI_VENDORING)
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/hidapi/hidapi/hidapi.h")
+        message(FATAL_ERROR "hidapi not found, did you forget to run 'git submodule update --init'?")
+    endif()
 
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/PS3EYEDriver/src/ps3eye.h")
-    message(FATAL_ERROR "PS3EYEDriver not found, did you forget to run 'git submodule update --init'?")
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/libusb-1.0/libusb/libusb.h")
+        message(FATAL_ERROR "libusb not found, did you forget to run 'git submodule update --init'?")
+    endif()
+
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/PS3EYEDriver/src/ps3eye.h")
+        message(FATAL_ERROR "PS3EYEDriver not found, did you forget to run 'git submodule update --init'?")
+    endif()
 endif()
 
 # get rid of Visual Studio's default "Debug" and "Release" output directories

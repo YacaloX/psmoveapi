@@ -15,8 +15,11 @@ set(PSMOVEAPI_PLATFORM_SRC)    # Container for source files
 set(PSMOVEAPI_INSTALL_TARGETS) # Container for build targets to be installed
 set(PSMOVEAPI_MATH_SRC)        # Container for math related source files
 
-include_directories(${ROOT_DIR}/external/hidapi/hidapi)
-include_directories(${ROOT_DIR}/external/glm)
+
+IF(PSMOVEAPI_VENDORING)
+    include_directories(${ROOT_DIR}/external/hidapi/hidapi)
+    include_directories(${ROOT_DIR}/external/glm)
+ENDIF()
 include_directories(${CMAKE_BINARY_DIR})
 
 set(INFO_LICENSE "BSD")
@@ -54,7 +57,11 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     list(APPEND PSMOVEAPI_REQUIRED_LIBS ${COREFOUNDATION})
     list(APPEND PSMOVEAPI_REQUIRED_LIBS ${IOBLUETOOTH})
 
-    set(HIDAPI_SRC ${ROOT_DIR}/external/hidapi/mac/hid.c)
+    IF(PSMOVEAPI_VENDORING)
+        set(HIDAPI_SRC ${ROOT_DIR}/external/hidapi/mac/hid.c)
+    ELSE()
+        message(FATAL_ERROR "disabling vendoring is currently not supported for ${CMAKE_SYSTEM_NAME}")
+    ENDIF()
 
     list(APPEND PSMOVEAPI_PLATFORM_SRC
         ${CMAKE_CURRENT_LIST_DIR}/platform/psmove_port_osx.mm)
@@ -69,7 +76,11 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 ELSEIF(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     list(APPEND PSMOVEAPI_REQUIRED_LIBS setupapi bthprops kernel32 ws2_32 winmm version imm32)
 
-    set(HIDAPI_SRC ${ROOT_DIR}/external/hidapi/windows/hid.c)
+    IF(PSMOVEAPI_VENDORING)
+        set(HIDAPI_SRC ${ROOT_DIR}/external/hidapi/windows/hid.c)
+    ELSE()
+        message(FATAL_ERROR "disabling vendoring is currently not supported for ${CMAKE_SYSTEM_NAME}")
+    ENDIF()
 
     list(APPEND PSMOVEAPI_PLATFORM_SRC
         ${CMAKE_CURRENT_LIST_DIR}/platform/psmove_port_windows.c)
@@ -93,7 +104,17 @@ ELSE()
     include_directories(${BLUEZ_INCLUDE_DIRS})
     list(APPEND PSMOVEAPI_REQUIRED_LIBS ${BLUEZ_LIBRARIES})
 
-    set(HIDAPI_SRC ${ROOT_DIR}/external/hidapi/linux/hid.c)
+    IF(PSMOVEAPI_VENDORING)
+        set(HIDAPI_SRC ${ROOT_DIR}/external/hidapi/linux/hid.c)
+    ELSE()
+        pkg_check_modules(HIDAPI REQUIRED hidapi-hidraw)
+        include_directories(${HIDAPI_INCLUDE_DIRS})
+        list(APPEND PSMOVEAPI_REQUIRED_LIBS hidapi-hidraw)
+
+        pkg_check_modules(GLM REQUIRED glm)
+        include_directories(${GLM_INCLUDE_DIRS})
+        list(APPEND PSMOVEAPI_REQUIRED_LIBS ${GLM_LIBRARIES})
+    ENDIF()
 
     list(APPEND PSMOVEAPI_PLATFORM_SRC
         ${CMAKE_CURRENT_LIST_DIR}/platform/psmove_port_linux.cpp)

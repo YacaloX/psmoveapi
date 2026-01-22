@@ -21,6 +21,9 @@ IF (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
     set(LIBUSB_FOUND TRUE)
 
 ELSE (LIBUSB_INCLUDE_DIR AND LIBUSB_LIBRARIES)
+    IF (NOT PSMOVEAPI_VENDORING)
+        message(FATAL_ERROR "libusb was not found and vendoring is disabled")
+    ENDIF()
     # Because we want to use the static library,
     # look locally only.
     find_path(LIBUSB_INCLUDE_DIR
