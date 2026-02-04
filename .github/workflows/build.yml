@@ -39,7 +39,7 @@ jobs:
         run: bash -e -x scripts/build_package.sh
       - uses: actions/upload-artifact@v6
         with:
-          name: build-result
+          name: build-result-${{ matrix.build_type }}
           path: upload/*
       - name: Upload release
         if: startsWith(github.ref, 'refs/tags/')
