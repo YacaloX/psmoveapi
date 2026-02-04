@@ -37,7 +37,7 @@ jobs:
         run: bash -e -x scripts/install_dependencies.sh
       - name: Build package
         run: bash -e -x scripts/build_package.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v6
         with:
           name: build-result
           path: upload/*
