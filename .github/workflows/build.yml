@@ -19,7 +19,7 @@ jobs:
         include:
           - build_host: ubuntu-latest
             build_type: linux-native-gcc
-          - build_host: macos-13
+          - build_host: macos-15-intel
             build_type: macos-native-clang-x86_64
           - build_host: macos-latest
             build_type: macos-native-clang-arm64
@@ -37,9 +37,9 @@ jobs:
         run: bash -e -x scripts/install_dependencies.sh
       - name: Build package
         run: bash -e -x scripts/build_package.sh
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v6
         with:
-          name: build-result
+          name: build-result-${{ matrix.build_type }}
           path: upload/*
       - name: Upload release
         if: startsWith(github.ref, 'refs/tags/')
