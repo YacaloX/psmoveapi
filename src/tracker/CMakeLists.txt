@@ -16,6 +16,9 @@ option(PSMOVE_USE_DEBUG_CAPTURE "Always show camera capture input" OFF)
 
 
 IF(PSMOVE_USE_PS3EYE_DRIVER)
+    IF(NOT PSMOVEAPI_VENDORING)
+        message(FATAL_ERROR "disabling vendoring is currently not supported for PS3EYEDriver")
+    ENDIF()
     # PS3EYEDriver is based on GPL'd code
     set(INFO_LICENSE "GPL")
 
