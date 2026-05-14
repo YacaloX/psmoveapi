@@ -41,7 +41,7 @@
 #ifdef __linux
 #  include <unistd.h>
 #  include <linux/limits.h>
-#  include <sys/poll.h>
+#  include <poll.h>
 #endif
 
 #ifdef _WIN32
