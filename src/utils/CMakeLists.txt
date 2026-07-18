@@ -21,7 +21,7 @@ else()
   if (PSMOVE_USE_SIXPAIR)
     # sixpair needs libusb
     find_package(PkgConfig REQUIRED)
-    pkg_check_modules(LIBUSB REQUIRED libusb QUIET)
+    pkg_check_modules(LIBUSB REQUIRED libusb-1.0 QUIET)
     include_directories(${LIBUSB_INCLUDE_DIRS})
     target_link_libraries(psmove ${LIBUSB_LIBRARIES})
   endif()
